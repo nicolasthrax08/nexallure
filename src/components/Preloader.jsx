@@ -79,8 +79,6 @@ export default function Preloader({ lang = "EN" }) {
   const canvasRef = useRef(null)
   const glitchRef = useRef(null)
 
-  const isChinese = lang === "ZH" || lang === "TW"
-
   const dismiss = useCallback(() => {
     setExiting(true)
     setTimeout(() => {
