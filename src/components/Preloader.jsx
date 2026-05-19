@@ -54,7 +54,7 @@ function geoToSvgPath(feature, width, height) {
 
 async function loadWorldPaths() {
   if (cachedWorldPaths) return cachedWorldPaths
-  const res = await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json")
+  const res = await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
   const topology = await res.json()
   const countries = feature(topology, topology.objects.countries)
   cachedWorldPaths = countries.features.map(f => geoToSvgPath(f, 500, 250)).filter(Boolean)
