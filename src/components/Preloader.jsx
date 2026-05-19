@@ -133,17 +133,17 @@ export default function Preloader({ lang = "EN" }) {
 
   useEffect(() => {
     // Start branding animation immediately upon mount
-    const t1 = setTimeout(() => setStage(1), 100)   // start glitch
-    const t2 = setTimeout(() => setStage(2), 910)   // 100 + 810 = 910ms (Font settles)
-    const t3 = setTimeout(() => setStage(3), 1300)  // tagline
-    const t4 = setTimeout(() => setStage(4), 1800)  // button
+    const t1 = setTimeout(() => setStage(1), 0)    // immediate glitch
+    const t2 = setTimeout(() => setStage(2), 1620) // 0 + 1620 = 1620ms (Font settles)
+    const t3 = setTimeout(() => setStage(3), 2000) // tagline
+    const t4 = setTimeout(() => setStage(4), 2500) // button
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [])
 
-  // UPDATED: Font glitch effect - 9 flickers at 90ms intervals
+  // UPDATED: Font glitch effect - 18 flickers at 90ms intervals
   useEffect(() => {
     if (stage !== 1) return
-    const totalFlickers = 9
+    const totalFlickers = 18
     let count = 0
     const interval = 90 
 
