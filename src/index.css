@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark sections (hero, footer) */
+  --midnight-navy:  #0A0F1E;
+  --charcoal:       #1C2333;
+  --slate-gray:     #4A5568;
+  --warm-white:     #F7F6F2;
+  --signal-gold:    #C9A84C;
+  --gold-shadow:    #7A5F20;
+  --verified-green: #2D6A4F;
+  --border-dark:    #2A3348;
+  --text-light:     #94A3B8;
+
+  /* Light mode (JP Morgan standard) */
+  --off-white:      #F5F4F0;
+  --pure-white:     #FFFFFF;
+  --border:         #D4D8E1;
+  --gold:           #B8922E;
+  --gold-dim:       rgba(184,146,46,0.12);
+  --green:          #1E5C3A;
+  --green-bg:       rgba(30,92,58,0.08);
+  --text-primary:   #0A0F1E;
+  --text-secondary: #3D4A5C;
+  --text-muted:     #6B7A8D;
+  --danger:         #8B1A1A;
+  --danger-bg:      rgba(139,26,26,0.06);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--off-white);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea, .card, .tag, .badge, .dropdown-panel, .chip {
+  border-radius: 0 !important;
+}
+
+button {
+  border: 1px solid;
+  box-shadow: 0 2px 0 0 rgba(0,0,0,0.45);
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+::selection {
+  background: rgba(201,168,76,0.3);
+  color: var(--warm-white);
+}
+
+/* Register page input placeholders */
+.register-input::placeholder {
+  color: rgba(240, 230, 204, 0.35);
+}
