@@ -79,7 +79,6 @@ export default function Preloader({ lang = "EN" }) {
   const canvasRef = useRef(null)
   const glitchRef = useRef(null)
 
-  const tagline = taglines[lang] ?? taglines.EN
   const isChinese = lang === "ZH" || lang === "TW"
 
   const dismiss = useCallback(() => {
@@ -135,13 +134,13 @@ export default function Preloader({ lang = "EN" }) {
   }, [showFull])
 
   useEffect(() => {
-    if (!showFull) return
-    const t1 = setTimeout(() => setStage(1), 300)   // start glitch
-    const t2 = setTimeout(() => setStage(2), 1110)  // 300 + 810 = 1110ms (Font settles)
-    const t3 = setTimeout(() => setStage(3), 1500)  // tagline
-    const t4 = setTimeout(() => setStage(4), 2000)  // button
+    // Start branding animation immediately upon mount
+    const t1 = setTimeout(() => setStage(1), 100)   // start glitch
+    const t2 = setTimeout(() => setStage(2), 910)   // 100 + 810 = 910ms (Font settles)
+    const t3 = setTimeout(() => setStage(3), 1300)  // tagline
+    const t4 = setTimeout(() => setStage(4), 1800)  // button
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
-  }, [showFull])
+  }, [])
 
   // UPDATED: Font glitch effect - 9 flickers at 90ms intervals
   useEffect(() => {
@@ -249,19 +248,59 @@ export default function Preloader({ lang = "EN" }) {
 
             <AnimatePresence>
               {stage >= 3 && (
-                <motion.p
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  style={{
-                    position: "relative", zIndex: 20, marginTop: "12px",
-                    fontSize: isChinese ? "13px" : "11px",
-                    fontFamily: isChinese ? "'IBM Plex Sans', sans-serif" : "'IBM Plex Mono', monospace",
-                    color: "rgba(255,255,255,0.5)", textAlign: "center",
-                  }}
-                >
-                  {tagline}
-                </motion.p>
+                <div style={{ position: "relative", zIndex: 20, marginTop: "16px", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+                  <motion.p
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    style={{
+                      fontSize: "10px",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      color: "rgba(255,255,255,0.65)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.15em",
+                      margin: 0,
+                    }}
+                  >
+                    {taglines.EN}
+                  </motion.p>
+
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{
+                      opacity: [0.3, 1, 0.3],
+                      scale: [0.8, 1.2, 0.8]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    style={{
+                      color: "#c9a84c",
+                      fontSize: "14px",
+                      lineHeight: 1,
+                      textShadow: "0 0 8px rgba(201,168,76,0.6)"
+                    }}
+                  >
+                    •
+                  </motion.span>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                    style={{
+                      fontSize: "13px",
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      color: "rgba(255,255,255,0.45)",
+                      margin: 0,
+                      letterSpacing: "0.05em"
+                    }}
+                  >
+                    {taglines.ZH}
+                  </motion.p>
+                </div>
               )}
             </AnimatePresence>
 
