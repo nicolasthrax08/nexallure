@@ -20,7 +20,6 @@ const GLITCH_FONTS = [
   "'Times New Roman', serif",
   "'Verdana', sans-serif",
   "'Comic Sans MS', cursive",
-  "'Playfair Display', serif",
 ]
 
 const FINAL_FONT = "'Playfair Display', serif"
@@ -91,7 +90,6 @@ export default function Preloader({ lang = "EN" }) {
     }, 600)
   }, [])
 
-  // Preload world map immediately on mount — don't wait for showFull
   useEffect(() => {
     loadWorldPaths().then(paths => {
       setWorldPaths(paths)
@@ -99,7 +97,6 @@ export default function Preloader({ lang = "EN" }) {
     }).catch(() => {})
   }, [])
 
-  // Particle canvas
   useEffect(() => {
     if (!showFull) return
     const canvas = canvasRef.current
@@ -137,25 +134,24 @@ export default function Preloader({ lang = "EN" }) {
     return () => cancelAnimationFrame(raf)
   }, [showFull])
 
-  // Stage sequencing
   useEffect(() => {
     if (!showFull) return
     const t1 = setTimeout(() => setStage(1), 300)   // start glitch
-    const t2 = setTimeout(() => setStage(2), 1200)  // font settles
+    const t2 = setTimeout(() => setStage(2), 1110)  // 300 + 810 = 1110ms (Font settles)
     const t3 = setTimeout(() => setStage(3), 1500)  // tagline
     const t4 = setTimeout(() => setStage(4), 2000)  // button
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [showFull])
 
-  // Font glitch effect — fires 8-10 times in ~900ms
+  // UPDATED: Font glitch effect - 9 flickers at 90ms intervals
   useEffect(() => {
     if (stage !== 1) return
     const totalFlickers = 9
     let count = 0
-    const interval = 90 // ms between flickers
+    const interval = 90 
 
     glitchRef.current = setInterval(() => {
-      const randomFont = GLITCH_FONTS[Math.floor(Math.random() * (GLITCH_FONTS.length - 1))]
+      const randomFont = GLITCH_FONTS[Math.floor(Math.random() * GLITCH_FONTS.length)]
       setCurrentFont(randomFont)
       count++
       if (count >= totalFlickers) {
@@ -166,7 +162,7 @@ export default function Preloader({ lang = "EN" }) {
     return () => clearInterval(glitchRef.current)
   }, [stage])
 
-  // Settle on final font
+  // UPDATED: Hard-cut to final font and add gold shadow on stage 2
   useEffect(() => {
     if (stage >= 2) {
       setCurrentFont(FINAL_FONT)
@@ -174,7 +170,6 @@ export default function Preloader({ lang = "EN" }) {
     }
   }, [stage])
 
-  // Return visit bar
   useEffect(() => {
     if (!showBar) return
     const t = setTimeout(() => setShowBar(false), 900)
@@ -183,7 +178,6 @@ export default function Preloader({ lang = "EN" }) {
 
   return (
     <>
-      {/* Return visit bar */}
       <AnimatePresence>
         {showBar && (
           <motion.div
@@ -197,7 +191,6 @@ export default function Preloader({ lang = "EN" }) {
         )}
       </AnimatePresence>
 
-      {/* Cinematic preloader */}
       <AnimatePresence>
         {showFull && (
           <motion.div
@@ -207,133 +200,53 @@ export default function Preloader({ lang = "EN" }) {
             exit={{ y: "-100%" }}
             transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
             style={{
-              position: "fixed",
-              top: 0, left: 0,
-              width: "100%", height: "100%",
-              zIndex: 9999,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
+              position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+              zIndex: 9999, display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", overflow: "hidden",
               background: "#0A0F1E",
             }}
           >
-            {/* Particles */}
-            <canvas
-              ref={canvasRef}
-              style={{
-                position: "absolute", top: 0, left: 0,
-                width: "100%", height: "100%",
-                pointerEvents: "none",
-              }}
-            />
+            <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
-            {/* World map + gold glow */}
-            <div style={{
-              position: "absolute",
-              top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "min(700px, 95vw)",
-            }}>
-              {/* Gold radial glow pulse from center */}
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(700px, 95vw)" }}>
               {glowActive && (
                 <motion.div
                   style={{
-                    position: "absolute",
-                    top: "50%", left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(201,168,76,0.25) 0%, rgba(201,168,76,0.08) 40%, transparent 70%)",
-                    pointerEvents: "none",
-                    zIndex: 1,
+                    position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+                    borderRadius: "50%", background: "radial-gradient(circle, rgba(201,168,76,0.25) 0%, rgba(201,168,76,0.08) 40%, transparent 70%)",
+                    pointerEvents: "none", zIndex: 1,
                   }}
                   initial={{ width: 0, height: 0, opacity: 0 }}
-                  animate={{
-                    width: ["0px", "600px", "800px", "600px"],
-                    height: ["0px", "300px", "400px", "300px"],
-                    opacity: [0, 0.9, 0.5, 0.3],
-                  }}
+                  animate={{ width: ["0px", "600px", "800px", "600px"], height: ["0px", "300px", "400px", "300px"], opacity: [0, 0.9, 0.5, 0.3] }}
                   transition={{ duration: 2.5, ease: "easeOut", times: [0, 0.3, 0.6, 1] }}
                 />
               )}
 
-              {/* Map SVG */}
-              <motion.svg
-                viewBox="0 0 500 250"
-                style={{ width: "100%", position: "relative", zIndex: 2 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: worldPaths.length ? 1 : 0 }}
-                transition={{ duration: 1, delay: 0.2 }}
-              >
-                {/* Subtle base fill for oceans */}
+              <motion.svg viewBox="0 0 500 250" style={{ width: "100%", position: "relative", zIndex: 2 }} initial={{ opacity: 0 }} animate={{ opacity: worldPaths.length ? 1 : 0 }} transition={{ duration: 1, delay: 0.2 }}>
                 <rect width="500" height="250" fill="rgba(10,15,30,0)" />
-
                 {worldPaths.map((d, i) => (
-                  <motion.path
-                    key={i}
-                    d={d}
-                    fill="rgba(201,168,76,0.07)"
-                    stroke="rgba(201,168,76,0.5)"
-                    strokeWidth="0.3"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 + i * 0.002 }}
-                  />
+                  <motion.path key={i} d={d} fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.5)" strokeWidth="0.3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.2 + i * 0.002 }} />
                 ))}
-
-                {/* Latitude lines for drama */}
-                {[-60, -30, 0, 30, 60].map(lat => {
-                  const y = (90 - lat) * (250 / 180)
-                  return (
-                    <line
-                      key={lat}
-                      x1="0" y1={y} x2="500" y2={y}
-                      stroke="rgba(201,168,76,0.08)"
-                      strokeWidth="0.5"
-                    />
-                  )
-                })}
-                {/* Longitude lines */}
-                {[-120, -60, 0, 60, 120].map(lng => {
-                  const x = (lng + 180) * (500 / 360)
-                  return (
-                    <line
-                      key={lng}
-                      x1={x} y1="0" x2={x} y2="250"
-                      stroke="rgba(201,168,76,0.08)"
-                      strokeWidth="0.5"
-                    />
-                  )
-                })}
               </motion.svg>
             </div>
 
-            {/* Wordmark — glitch then settle */}
+            {/* Wordmark — Glitch transitions to Hard Cut with Gold Shadow */}
             <motion.span
-              initial={{ opacity: 0 }}
               animate={{ opacity: stage >= 1 ? 1 : 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0 }}
               style={{
                 position: "relative",
                 zIndex: 20,
-                color: fontSettled ? "white" : "rgba(255,255,255,0.9)",
+                color: "white",
                 fontSize: "clamp(26px, 6vw, 38px)",
                 fontFamily: currentFont,
-                fontWeight: fontSettled ? 600 : 700,
-                letterSpacing: fontSettled ? "0.02em" : "0em",
-                transition: fontSettled
-                  ? "font-family 0.3s ease, letter-spacing 0.3s ease"
-                  : "none",
-                textShadow: glowActive && stage >= 2
-                  ? "0 0 30px rgba(201,168,76,0.4)"
-                  : "none",
+                fontWeight: 600,
+                textShadow: fontSettled ? "0 0 15px rgba(201,168,76,0.8)" : "none",
               }}
             >
               Nexallure
             </motion.span>
 
-            {/* Tagline — simple fade after font settles */}
             <AnimatePresence>
               {stage >= 3 && (
                 <motion.p
@@ -341,19 +254,10 @@ export default function Preloader({ lang = "EN" }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   style={{
-                    position: "relative",
-                    zIndex: 20,
-                    marginTop: "12px",
+                    position: "relative", zIndex: 20, marginTop: "12px",
                     fontSize: isChinese ? "13px" : "11px",
-                    fontFamily: isChinese
-                      ? "'IBM Plex Sans', sans-serif"
-                      : "'IBM Plex Mono', monospace",
-                    letterSpacing: isChinese ? "0.05em" : "0.12em",
-                    color: "rgba(255,255,255,0.5)",
-                    textTransform: isChinese ? "none" : "uppercase",
-                    textAlign: "center",
-                    padding: "0 24px",
-                    margin: "12px 24px 0",
+                    fontFamily: isChinese ? "'IBM Plex Sans', sans-serif" : "'IBM Plex Mono', monospace",
+                    color: "rgba(255,255,255,0.5)", textAlign: "center",
                   }}
                 >
                   {tagline}
@@ -361,47 +265,19 @@ export default function Preloader({ lang = "EN" }) {
               )}
             </AnimatePresence>
 
-            {/* CTA Button */}
             <AnimatePresence>
               {stage >= 4 && (
                 <motion.button
                   onClick={dismiss}
                   initial={{ opacity: 0, y: 8 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    boxShadow: [
-                      "0 0 0px rgba(201,168,76,0)",
-                      "0 0 22px rgba(201,168,76,0.7)",
-                      "0 0 8px rgba(201,168,76,0.3)",
-                    ],
-                  }}
-                  transition={{
-                    opacity: { duration: 0.4 },
-                    y: { duration: 0.4 },
-                    boxShadow: { duration: 1.4, delay: 0.4, times: [0, 0.4, 1] },
-                  }}
+                  animate={{ opacity: 1, y: 0 }}
                   style={{
-                    position: "relative",
-                    zIndex: 20,
-                    marginTop: "36px",
-                    background: "#c9a84c",
-                    color: "#0A0F1E",
-                    border: "none",
-                    padding: "13px 32px",
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
+                    position: "relative", zIndex: 20, marginTop: "36px",
+                    background: "#c9a84c", color: "#0A0F1E", border: "none",
+                    padding: "13px 32px", fontSize: "13px", fontWeight: 600, cursor: "pointer",
                   }}
                 >
-                  {lang === "ZH"
-                    ? "探索您的市场"
-                    : lang === "TW"
-                    ? "探索您的市場"
-                    : "Discover Your Markets"}
+                  {lang === "ZH" ? "探索您的市场" : lang === "TW" ? "探索您的市場" : "Discover Your Markets"}
                 </motion.button>
               )}
             </AnimatePresence>
