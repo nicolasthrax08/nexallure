@@ -563,12 +563,11 @@ export default function MarketGuidePage({ setPage, t }) {
                         </h2>
                       </div>
                       <div style={{ display: 'flex', gap: '12px' }} className="no-print">
-                      <MonitorButton 
-    industry={industry} 
-    region={market} 
-    userId={session?.user?.id} 
-  />
-  
+                        <MonitorButton 
+                          industry={t?.[industry] || industry} 
+                          region={market === 'any' ? (t?._lang === 'ZH' || t?._lang === 'TW' ? '全球市场' : 'Global Markets') : (t?.[market] || market)} 
+                          userId={session?.user?.id} 
+                        />
                         <button onClick={handlePrint} style={{ background: 'transparent', color: '#c9a84c', border: '1px solid rgba(201,168,76,0.3)', padding: '9px 18px', fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', cursor: 'pointer', letterSpacing: '0.05em' }}>
                           ↓ PDF
                         </button>

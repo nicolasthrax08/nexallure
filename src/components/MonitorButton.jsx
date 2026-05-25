@@ -92,11 +92,8 @@ export function MonitorButton({ industry, region, userId }) {
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
+              className="bg-[#141820] border border-[#C9A84C]/20 rounded-none relative"
               style={{
-                position: "relative",
-                background: "#141820",
-                border: "1px solid rgba(201, 168, 76, 0.2)",
-                borderRadius: 0,
                 maxWidth: "480px",
                 width: "100%",
                 padding: "48px 44px 40px",
@@ -166,10 +163,7 @@ export function MonitorButton({ industry, region, userId }) {
                   maxWidth: "380px",
                 }}
               >
-                Flagging this asset saves this custom industry + region combo to
-                your profile watchlist. Our Llama 4 Maverick engine will
-                re-evaluate this market structure daily to track operational
-                shifts and volatility indexes.
+                Confirming this request saves this industry + region combination to your profile watchlist. Once activated, this asset can be reviewed and tracked at any time directly on your Monitor page.
               </p>
 
               {/* Confirm Monitoring button */}
