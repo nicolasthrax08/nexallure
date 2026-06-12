@@ -22,6 +22,8 @@ const ENDPOINT =
 
 if (!ENDPOINT) {
   console.warn('[Nexallure] VITE_FORM_ENDPOINT is not set. Forms will show fallback message.');
+} else {
+  console.log(`[Nexallure] Form endpoint configured: ${ENDPOINT.substring(0, 20)}...`);
 }
 
 export async function submitForm(formType, payload) {
