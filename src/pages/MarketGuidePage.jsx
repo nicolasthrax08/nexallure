@@ -335,6 +335,8 @@ export default function MarketGuidePage({ setPage, t }) {
     } catch (err) {
       console.error(err)
       setError(err.message || t?.mg_error || 'Could not load market data. Please try again.')
+      // Ensure the result is cleared on error to prevent displaying stale data
+      setResult(null)
     } finally {
       setLoading(false)
     }
