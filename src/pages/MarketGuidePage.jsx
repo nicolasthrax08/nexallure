@@ -296,8 +296,16 @@ export default function MarketGuidePage({ setPage, t }) {
     setLoading(true)
     setError(null)
     setResult(null)
+
+    const baseUrl = import.meta.env.VITE_API_URL || ''
+    const endpoint = baseUrl
+      ? `${baseUrl.replace(/\/$/, '')}/api/market-guide`
+      : '/api/market-guide'
+
+    console.log(`[Nexallure] Market Guide Fetching from: ${endpoint}`)
+
     try {
-      const response = await fetch('/api/market-guide', {
+      const response = await fetch(endpoint, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -317,6 +325,9 @@ export default function MarketGuidePage({ setPage, t }) {
           const errJson = JSON.parse(text);
           throw new Error(errJson.error || errJson.detail);
         } catch {
+          if (response.status === 404) {
+            throw new Error(`API not found (404). Ensure your backend server (e.g., vercel dev) is running on port 3000 and VITE_API_URL is correctly set.`);
+          }
           throw new Error(response.status === 401 
             ? 'Authentication required. Please sign in to generate market guides.' 
             : `Server error (Status ${response.status}). Please try again later.`);
